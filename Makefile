@@ -2,51 +2,58 @@
 NAME				= so_long
 
 # Directories
-LIBFT				= ./Libft/libft.a
+LIBFT_DIR			= ./Libft
+MLX_DIR				= ./minilibx-linux
+LIBFT				= $(LIBFT_DIR)/libft.a
+MLX_LIB				= $(MLX_DIR)/libmlx.a
 INC					= inc/
 SRC_DIR				= srcs/
 OBJ_DIR				= obj/
 
-# Compiler and CFlags
+# Compiler and Flags
 CC					= gcc
-CFLAGS				= -Wall -Werror -Wextra -I
+CFLAGS				= -Wall -Werror -Wextra -I $(INC)
 RM					= rm -f
 
 # Source Files
-SRCS_DIR		=	$(SRC_DIR)srcs/so_long.c \
+SRCS				= $(SRC_DIR)so_long.c
 
-# Concatenate all source files
-SRCS 				= $(COMMANDS_DIR)
-
-# Apply the pattern substitution to each source file in SRC and produce a corresponding list of object files in the OBJ_DIR
+# Object Files
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 
 # Build rules
-start:
-					@make all
+start: all
 
+# Compilation de Libft et MinilibX
 $(LIBFT):
-					@make -C ./Libft
+					@$(MAKE) -C $(LIBFT_DIR)
 
-all: 				$(NAME)
+$(MLX_LIB):
+					@$(MAKE) -C $(MLX_DIR)
 
-$(NAME): 			$(OBJ) $(LIBFT)
-					@$(CC) $(CFLAGS) $(INC) $(OBJ) $(LIBFT) -o $(NAME)
+# Compilation principale
+all: $(LIBFT) $(MLX_LIB) $(NAME)
 
-# Compile object files from source files
-$(OBJ_DIR)%.o:		$(SRC_DIR)%.c
-					@mkdir -p $(@D)
-					@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+$(NAME): $(OBJ) $(LIBFT) $(MLX_LIB)
+					@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) -L$(MLX_DIR) -lmlx -lX11 -lXext
+					@echo "✅ Compilation réussie !"
 
+# Compilation des fichiers objets
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+					@mkdir -p $(OBJ_DIR)
+					@$(CC) $(CFLAGS) -c $< -o $@
+
+# Nettoyage
 clean:
 					@$(RM) -r $(OBJ_DIR)
-					@make clean -C ./Libft
+					@$(MAKE) clean -C $(LIBFT_DIR)
+					@$(MAKE) clean -C $(MLX_DIR)
 
-fclean: 			clean
+fclean: clean
 					@$(RM) $(NAME)
-					@$(RM) $(LIBFT)
+					@$(MAKE) fclean -C $(LIBFT_DIR)
 
-re: 				fclean all
+re: fclean all
 
-# Phony targets represent actions not files
-.PHONY: 			start all clean fclean re
+# Phony targets
+.PHONY: start all clean fclean re
