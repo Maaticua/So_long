@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:37 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/25 13:57:46 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:26:08 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ typedef struct s_game
 	char	**map;
 	int		player_x;
 	int		player_y;
+	int		total_collec;
+	int		collected;
+	int		move_count;
 	t_textures	*textures;
 }	t_game;
 

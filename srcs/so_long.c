@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:45 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/25 15:05:12 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:38:55 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,10 +133,29 @@ void	move_player(t_game *game, int new_x, int new_y)
 	if (game->map[new_y][new_x] == '1')
 		return;
 
+	if (game->map[new_y][new_x] == 'C')
+	{
+		game->collected++;
+		game->map[new_y][new_x] = '0';
+	}
+
+	if (game->map[new_y][new_x] == 'E')
+	{
+		if (game->collected == game->total_collec)
+		{
+			ft_printf("gg, %d deplacement fait\n", game->move_count);
+			close_wind(game);
+		}
+		return;
+	}
+
 	game->map[game->player_y][game->player_x] = '0';
 	game->map[new_y][new_x] = 'P';
 	game->player_x = new_x;
 	game->player_y = new_y;
+
+	game->move_count++;
+	ft_printf("%d\n", game->move_count);
 
 	draw_map(game);
 }
@@ -154,7 +173,24 @@ int handle_keys(int keycode, t_game *game)
 		move_player(game, game->player_x + 1, game->player_y);
 	return (0);
 }
+void	count_collec(t_game *game)
+{
+	int	x;
+	int	y;
 
+	y = 0;
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (game->map[y][x] == 'C')
+				game->total_collec++;
+			x++;
+		}
+		y++;
+	}
+}
 
 int	main(int ac, char **av)
 {
@@ -197,7 +233,12 @@ int	main(int ac, char **av)
 		write(2, "Error: invalid map\n", 19);
 		return (1);
 	}
+
 	find_player_loc(game);
+
+	count_collec(game);
+	game->collected = 0;
+	game->move_count = 0;
 
 	get_map_dimensions(game->map, &map_width, &map_height);
 
