@@ -12,7 +12,7 @@ OBJ_DIR				= obj/
 
 # Compiler and Flags
 CC					= gcc
-CFLAGS				= -Wall -Werror -Wextra -I $(INC)
+CFLAGS				= -Wall -Werror -Wextra -g3 -I $(INC)
 RM					= rm -f
 
 # Source Files

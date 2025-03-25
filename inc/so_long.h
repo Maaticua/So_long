@@ -6,13 +6,18 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:37 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/24 17:03:31 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:57:46 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
+
 # define ESC_KEY 65307
+# define W_KEY 119
+# define A_KEY 97
+# define S_KEY 115
+# define D_KEY 100
 
 # include "../Libft/inc/libft.h"
 # include <limits.h>
@@ -39,6 +44,8 @@ typedef struct s_game
 	void	*mlx;
 	void	*mlx_win;
 	char	**map;
+	int		player_x;
+	int		player_y;
 	t_textures	*textures;
 }	t_game;
 

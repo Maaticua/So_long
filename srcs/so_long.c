@@ -6,11 +6,33 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:45 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/24 17:17:04 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:05:12 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/so_long.h"
+
+void	get_map_dimensions(char **map, int *width, int *height)
+{
+	int	y;
+	int row_len;
+
+	*width = 0;
+	*height = 0;
+
+	row_len = 0;
+	y = 0;;
+	while (map[y] != NULL)
+	{
+		row_len = 0;
+		while (map[y][row_len] != '\n')
+			row_len++;
+		if (row_len > *width)
+			*width = row_len;
+		y++;
+	}
+	*height = y;
+}
 
 int	close_wind(t_game *game)
 {
@@ -27,76 +49,6 @@ int	close_wind(t_game *game)
 	}
 	free(game);
 	exit(0);
-	return (0);
-}
-int	handle_keys(int keycode, t_game *game)
-{
-	if (keycode == ESC_KEY)
-		close_wind(game);
-	return (0);
-}
-int	main(int ac, char **av)
-{
-	t_game	*game;
-
-	if (ac != 2)
-	{
-		write(2, "ag pa b1", 8);
-		return (1);
-	}
-
-	game = malloc(sizeof(t_game));
-	if (!game)
-	{
-		write(2, "Error\n", 6);
-		return (1);
-	}
-
-	game->textures = malloc(sizeof(t_textures));
-	if (!game->textures)
-	{
-    	free(game);
-		write(2, "Error\n", 6);
-		return (1);
-	}
-
-	game->mlx = mlx_init();
-	if (!game->mlx)
-	{
-		free(game);
-		write(2, "Error\n", 6);
-		return (1);
-	}
-
-	game->mlx_win = mlx_new_window(game->mlx, 1920, 1080, "so_long");
-	if (!game->mlx_win)
-	{
-		free(game->mlx);
-		free(game);
-		write(2, "Error\n", 6);
-		return (1);
-	}
-
-	game->map = read_map(av[1]);
-	if (!game->map)
-	{
-		write(2, "Error: invalid map\n", 19);
-		return (1);
-	}
-	
-	game->textures->tile_size = 64;
-	game->textures->wall = mlx_xpm_file_to_image(game->mlx, "textures/wall.xpm", &game->textures->tile_size, &game->textures->tile_size);
-	game->textures->floor = mlx_xpm_file_to_image(game->mlx, "textures/floor.xpm", &game->textures->tile_size, &game->textures->tile_size);
-	game->textures->player = mlx_xpm_file_to_image(game->mlx, "textures/player.xpm", &game->textures->tile_size, &game->textures->tile_size);
-	game->textures->collec = mlx_xpm_file_to_image(game->mlx, "textures/collec.xpm", &game->textures->tile_size, &game->textures->tile_size);
-	game->textures->exit = mlx_xpm_file_to_image(game->mlx, "textures/exit.xpm", &game->textures->tile_size, &game->textures->tile_size);
-
-	draw_map(game);
-
-	mlx_key_hook(game->mlx_win, handle_keys, game);
-	mlx_hook(game->mlx_win, 17, 0, close_wind, game);
-
-	mlx_loop(game->mlx);
 	return (0);
 }
 
@@ -154,43 +106,125 @@ void	draw_map(t_game *game)
 		y++;
 	}
 }
+void	find_player_loc(t_game *game)
+{
+	int	x;
+	int y;
+
+	y = 0;
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (game->map[y][x] == 'P')
+			{
+				game->player_x = x;
+				game->player_y = y;
+				return;
+			}
+			x++;
+		}
+		y++;
+	}
+}
+void	move_player(t_game *game, int new_x, int new_y)
+{
+	if (game->map[new_y][new_x] == '1')
+		return;
+
+	game->map[game->player_y][game->player_x] = '0';
+	game->map[new_y][new_x] = 'P';
+	game->player_x = new_x;
+	game->player_y = new_y;
+
+	draw_map(game);
+}
+int handle_keys(int keycode, t_game *game)
+{
+	if (keycode == ESC_KEY)
+		close_wind(game);
+	else if (keycode == W_KEY) // Haut
+		move_player(game, game->player_x, game->player_y - 1);
+	else if (keycode == S_KEY) // Bas
+		move_player(game, game->player_x, game->player_y + 1);
+	else if (keycode == A_KEY) // Gauche
+		move_player(game, game->player_x - 1, game->player_y);
+	else if (keycode == D_KEY) // Droite
+		move_player(game, game->player_x + 1, game->player_y);
+	return (0);
+}
 
 
-// int	count_lines(char *mapname)
-// {
-// 	int		fd;
-// 	int		count;
-// 	char	*line;
+int	main(int ac, char **av)
+{
+	t_game	*game;
+	int		map_width;
+	int		map_height;
 
-// 	count = 0;
-// 	fd = open(mapname, O_RDONLY);
-// 	line = get_next_line(fd);
-// 	if (fd == -1)
-// 		return (-1);
-// 	while (line)
-// 	{
-// 		count++;
-// 		free(line);
-// 	}
-// 	close(fd);
-// 	return (count);
-// }
+	if (ac != 2)
+	{
+		write(2, "incorect arguments \n", 21);
+		return (1);
+	}
 
-// void	print_map(char **map)
-// {
-// 	int	i;
+	game = malloc(sizeof(t_game));
+	if (!game)
+	{
+		write(2, "Error\n", 6);
+		return (1);
+	}
 
-// 	i = 0;
-// 	while (map[i])
-// 		ft_printf("%s", map[i++]);
-// }
+	game->textures = malloc(sizeof(t_textures));
+	if (!game->textures)
+	{
+		free(game);
+		write(2, "Error\n", 6);
+		return (1);
+	}
 
-// void	free_map(char **map)
-// {
-// 	int	i;
+	game->mlx = mlx_init();
+	if (!game->mlx)
+	{
+		free(game);
+		write(2, "Error\n", 6);
+		return (1);
+	}
 
-// 	i = 0;
-// 	while (map[i])
-// 		free(map[i]);
-// 	free(map);
-// }
+	game->map = read_map(av[1]);
+	if (!game->map)
+	{
+		write(2, "Error: invalid map\n", 19);
+		return (1);
+	}
+	find_player_loc(game);
+
+	get_map_dimensions(game->map, &map_width, &map_height);
+
+	game->textures->tile_size = 64;
+	int window_width = map_width * game->textures->tile_size;
+	int window_height = map_height * game->textures->tile_size;
+
+	game->mlx_win = mlx_new_window(game->mlx, window_width, window_height, "so_long");
+	if (!game->mlx_win)
+	{
+		free(game->mlx);
+		free(game);
+		write(2, "Error\n", 6);
+		return (1);
+	}
+
+	game->textures->wall = mlx_xpm_file_to_image(game->mlx, "textures/wall.xpm", &game->textures->tile_size, &game->textures->tile_size);
+	game->textures->floor = mlx_xpm_file_to_image(game->mlx, "textures/floor.xpm", &game->textures->tile_size, &game->textures->tile_size);
+	game->textures->player = mlx_xpm_file_to_image(game->mlx, "textures/player.xpm", &game->textures->tile_size, &game->textures->tile_size);
+	game->textures->collec = mlx_xpm_file_to_image(game->mlx, "textures/collec.xpm", &game->textures->tile_size, &game->textures->tile_size);
+	game->textures->exit = mlx_xpm_file_to_image(game->mlx, "textures/exit.xpm", &game->textures->tile_size, &game->textures->tile_size);
+
+	draw_map(game);
+
+	mlx_key_hook(game->mlx_win, handle_keys, game);
+	mlx_hook(game->mlx_win, 17, 0, close_wind, game);
+
+	mlx_loop(game->mlx);
+	return (0);
+}
