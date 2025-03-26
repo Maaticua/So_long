@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:45 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/25 15:38:55 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:13:39 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,32 @@ void	get_map_dimensions(char **map, int *width, int *height)
 	int	y;
 	int row_len;
 
+	y = 0;
 	*width = 0;
 	*height = 0;
-
-	row_len = 0;
-	y = 0;;
 	while (map[y] != NULL)
 	{
-		row_len = 0;
-		while (map[y][row_len] != '\n')
-			row_len++;
+		row_len = ft_strlen(map[y]);
 		if (row_len > *width)
 			*width = row_len;
 		y++;
 	}
 	*height = y;
+}
+
+void	free_map(char **map)
+{
+	int	i;
+
+	i = 0;
+	if (!map)
+		return;
+	while (map[i])
+	{
+		free(map[i]);
+		i++;
+	}
+	free(map);
 }
 
 int	close_wind(t_game *game)
@@ -51,28 +62,90 @@ int	close_wind(t_game *game)
 	exit(0);
 	return (0);
 }
+char **copy_map(char **map)
+{
+	int	y;
+	char **cpy;
+
+	y = 0;
+	while (map[y])
+		y++;
+
+	cpy = malloc((y+1) * sizeof(char *));
+	if (!cpy)
+		return (NULL);
+	y = 0;
+	while (map[y])
+	{
+		cpy[y] = ft_strdup(map[y]);
+		if (!cpy[y])
+		{
+			free_map(cpy);
+			return (NULL);
+		}
+		y++;
+	}
+	cpy[y] = NULL;
+	return (cpy);
+}
+int	check_map_type(const char *filename)
+{
+	int	len;
+
+	len = ft_strlen(filename);
+	if (len < 4 || ft_strncmp(filename + len - 4, ".ber", 4) != 0)
+	{
+		write (2, "Error wrong map type", 21);
+		return (0);
+	}
+	return (1);
+}
 
 char	**read_map(const char *filename)
 {
+	int		i;
 	int		fd;
+	int		lines;
 	char	*line;
 	char	**map;
-	int		lines;
+
+
+	if (!check_map_type(filename))
+		return (NULL);
 
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
+	{
+		write(2, "Error: Cannot open map file\n", 27);
 		return (NULL);
+	}
 
-	map = NULL;
 	lines = 0;
 	while ((line = get_next_line(fd)))
 	{
-		map = realloc(map, (lines + 1) * sizeof(char *));
-		map[lines] = line;
+		free(line);
 		lines++;
 	}
-	map = realloc(map, (lines + 1) * sizeof(char *));
-	map[lines] = NULL;
+	close(fd);
+
+	map = malloc((lines + 1) * sizeof(char *));
+	if (!map)
+		return (NULL);
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+	{
+		free(map);
+		write(2, "Error: cannot reopen map file\n", 31);
+		return (NULL);
+	}
+
+	i = 0;
+	while ((line = get_next_line(fd)))
+	{
+		map[i] = line;
+		i++;
+	}
+	map[i] = NULL;
 	close(fd);
 	return (map);
 }
@@ -190,6 +263,91 @@ void	count_collec(t_game *game)
 		}
 		y++;
 	}
+}
+
+int is_valid_map_char(char c)
+{
+	return (c == '0' || c == '1' || c == 'P' || c == 'C' || c == 'E');
+}
+void	floodfill(char **map, int x, int y)
+{
+	if (map[y][x] == '1'|| map[y][x] == 'F')
+		return;
+	map[y][x] = 'F';
+	floodfill(map, x + 1, y);
+	floodfill(map, x - 1, y);
+	floodfill(map, x, y + 1);
+	floodfill(map, x, y - 1);
+}
+int	is_map_solvable(t_game *game)
+{
+	int	y;
+	char **map_temp;
+
+	y = 0;
+	map_temp = copy_map(game->map);
+	if(!map_temp)
+		return (0);
+
+	floodfill(map_temp, game->player_x, game->player_y);
+	while (map_temp[y])
+	{
+		if (ft_strchr(map_temp[y], 'C') || ft_strchr(map_temp[y], 'E'))
+		{
+			free_map(map_temp);
+			write(2, "Error, unsolvable\n", 19);
+			return (0);
+		}
+		y++;
+	}
+	free_map(map_temp);
+	return (1);
+}
+int validate_map(t_game *game)
+{
+	int y;
+	int x;
+	int player_count;
+	int exit_count;
+	int collect_count;
+	int width;
+
+	y = 0;
+	player_count = 0;
+	exit_count = 0;
+	collect_count = 0;
+	width = ft_strlen(game->map[0]);
+	while (game->map[y])
+	{
+		if ((int)ft_strlen(game->map[y]) != width)
+		{
+			write(2, "Error: rectangular\n", 20);
+			return (0);
+		}
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (!is_valid_map_char(game->map[y][x]))
+			{
+				write(2, "Error: Invalid character\n", 26);
+				return (0);
+			}
+			if (game->map[y][x] == 'P')
+				player_count++;
+			if (game->map[y][x] == 'E')
+				exit_count++;
+			if (game->map[y][x] == 'C')
+				collect_count++;
+			x++;
+		}
+		y++;
+	}
+	if (player_count != 1 || exit_count != 1 || collect_count < 1)
+	{
+		write(2, "Error: Map must have 1 player, 1 exit, and at least 1 collectible\n", 65);
+		return (0);
+	}
+	return is_map_solvable(game);
 }
 
 int	main(int ac, char **av)
