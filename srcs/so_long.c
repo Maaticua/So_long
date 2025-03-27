@@ -6,11 +6,21 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:45 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/26 16:13:39 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/03/27 19:22:32 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/so_long.h"
+
+char	*trim_newline(char *str)
+{
+	int	len;
+
+	len = ft_strlen(str);
+	if (len > 0 && str[len - 1] == '\n')
+		str[len - 1] = '\0';
+	return (str);
+}
 
 void	get_map_dimensions(char **map, int *width, int *height)
 {
@@ -109,28 +119,27 @@ char	**read_map(const char *filename)
 	char	*line;
 	char	**map;
 
+	lines = 0;
 
 	if (!check_map_type(filename))
 		return (NULL);
 
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-	{
-		write(2, "Error: Cannot open map file\n", 27);
-		return (NULL);
-	}
+		return (write(2, "Error: Cannot open map file\n", 27), NULL);
 
-	lines = 0;
 	while ((line = get_next_line(fd)))
 	{
+		if (line[0] != '\n')
+			lines++;
 		free(line);
-		lines++;
 	}
 	close(fd);
 
 	map = malloc((lines + 1) * sizeof(char *));
 	if (!map)
 		return (NULL);
+
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 	{
@@ -142,8 +151,11 @@ char	**read_map(const char *filename)
 	i = 0;
 	while ((line = get_next_line(fd)))
 	{
-		map[i] = line;
-		i++;
+		if (line[0] != '\n')
+		{
+			map[i] = trim_newline(line);
+			i++;
+		}
 	}
 	map[i] = NULL;
 	close(fd);
@@ -269,39 +281,50 @@ int is_valid_map_char(char c)
 {
 	return (c == '0' || c == '1' || c == 'P' || c == 'C' || c == 'E');
 }
-void	floodfill(char **map, int x, int y)
+void	floodfill(char **map, int x, int y, t_game *game)
 {
-	if (map[y][x] == '1'|| map[y][x] == 'F')
-		return;
+	if (x < 0 || y < 0 || x >= game->width || y >= game->height)
+		return ;
+	if (map[y][x] == '1' || map[y][x] == 'F')
+		return ;
+	if (map[y][x] == 'E')
+	{
+		map[y][x] = 'V';
+		return ;
+	}
 	map[y][x] = 'F';
-	floodfill(map, x + 1, y);
-	floodfill(map, x - 1, y);
-	floodfill(map, x, y + 1);
-	floodfill(map, x, y - 1);
+	floodfill(map, x + 1, y, game);
+	floodfill(map, x - 1, y, game);
+	floodfill(map, x, y + 1, game);
+	floodfill(map, x, y - 1, game);
 }
+
 int	is_map_solvable(t_game *game)
 {
+	int	x;
 	int	y;
 	char **map_temp;
 
-	y = 0;
 	map_temp = copy_map(game->map);
 	if(!map_temp)
-		return (0);
+		return (ft_printf("Error, map cpy failed"), 1);
+	find_player_loc(game);
+	floodfill(map_temp, game->player_x, game->player_y, game);
 
-	floodfill(map_temp, game->player_x, game->player_y);
-	while (map_temp[y])
+	y = -1;
+	while (map_temp[++y])
 	{
-		if (ft_strchr(map_temp[y], 'C') || ft_strchr(map_temp[y], 'E'))
+		x = -1;
+		while (map_temp[y][++x])
 		{
-			free_map(map_temp);
-			write(2, "Error, unsolvable\n", 19);
-			return (0);
+			if (map_temp[y][x] == 'C' || map_temp[y][x] == 'E')
+			{
+				ft_printf("Error ; map design is invalid\n");
+				return (free_map(map_temp), 1);
+			}
 		}
-		y++;
 	}
-	free_map(map_temp);
-	return (1);
+	return (free_map(map_temp), 1);
 }
 int validate_map(t_game *game)
 {
@@ -317,11 +340,12 @@ int validate_map(t_game *game)
 	exit_count = 0;
 	collect_count = 0;
 	width = ft_strlen(game->map[0]);
+
 	while (game->map[y])
 	{
 		if ((int)ft_strlen(game->map[y]) != width)
 		{
-			write(2, "Error: rectangular\n", 20);
+			write(2, "Error: not rectangular\n", 20);
 			return (0);
 		}
 		x = 0;
@@ -347,7 +371,14 @@ int validate_map(t_game *game)
 		write(2, "Error: Map must have 1 player, 1 exit, and at least 1 collectible\n", 65);
 		return (0);
 	}
-	return is_map_solvable(game);
+
+	if (!is_map_solvable(game))
+	{
+		write (2, "Error: unsolvable\n", 18);
+		return (0);
+	}
+
+	return (1);
 }
 
 int	main(int ac, char **av)
@@ -392,6 +423,13 @@ int	main(int ac, char **av)
 		return (1);
 	}
 
+	if (!validate_map(game))
+	{
+		free_map(game->map);
+		free(game);
+		return (1);
+	}
+
 	find_player_loc(game);
 
 	count_collec(game);
@@ -401,7 +439,7 @@ int	main(int ac, char **av)
 	get_map_dimensions(game->map, &map_width, &map_height);
 
 	game->textures->tile_size = 64;
-	int window_width = map_width * game->textures->tile_size;
+	int window_width = (map_width -1) * game->textures->tile_size;
 	int window_height = map_height * game->textures->tile_size;
 
 	game->mlx_win = mlx_new_window(game->mlx, window_width, window_height, "so_long");
