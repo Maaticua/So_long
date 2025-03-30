@@ -306,9 +306,17 @@ int	is_map_solvable(t_game *game)
 	char **map_temp;
 
 	map_temp = copy_map(game->map);
+	// int i = 0;
+	// while (map_temp[i])
+	// {
+	// 	ft_printf("%s\n", map_temp[i]);
+	// 	i++;
+	// }
 	if(!map_temp)
 		return (ft_printf("Error, map cpy failed"), 1);
 	find_player_loc(game);
+	get_map_dimensions(game->map, &game->width, &game->height);
+	// ft_printf("Map dimensions: width = %d, height = %d\n", &game->width, &game->height);
 	floodfill(map_temp, game->player_x, game->player_y, game);
 
 	y = -1;
@@ -439,7 +447,7 @@ int	main(int ac, char **av)
 	get_map_dimensions(game->map, &map_width, &map_height);
 
 	game->textures->tile_size = 64;
-	int window_width = (map_width -1) * game->textures->tile_size;
+	int window_width = map_width * game->textures->tile_size;
 	int window_height = map_height * game->textures->tile_size;
 
 	game->mlx_win = mlx_new_window(game->mlx, window_width, window_height, "so_long");
