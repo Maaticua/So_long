@@ -37,7 +37,7 @@ int	check_map_rectangular(t_game *game)
 	width = ft_strlen(game->map[0]);
 	while (game->map[y])
 	{
-		if ((int)ft_strlen(game->map[y] != width))
+		if ((int)ft_strlen(game->map[y]) != width)
 		{
 			write(2, "Error: map is not rectangular\n", 30);
 			return (0);
@@ -76,7 +76,7 @@ int	count_map_elements(t_game *game)
 		y++;
 	}
 	if (player != 1 || exit != 1 || collect < 1)
-		return (write(2, "Error: invalide map setup\n", 25), 0);
+		return (write(2, "Error: invalid map setup\n", 25), 0);
 	return (1);
 }
 int	is_map_enclosed(t_game *game)
@@ -104,6 +104,8 @@ int	is_map_enclosed(t_game *game)
 }
 int	validate_map(t_game *game)
 {
+	if (!game->map || !game->map[0])
+		return (write(2, "Error: map is empty\n", 20), 0);
 	if (!check_map_rectangular(game))
 		return (0);
 	if (!is_map_enclosed(game))

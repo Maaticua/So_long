@@ -18,6 +18,8 @@ void	floodfill(char **map, int x, int y, t_game *game)
 		return ;
 	if (map[y][x] == '1' || map[y][x] == 'F')
 		return ;
+	if (map[y][x] == 'E')
+		return ; // Skip marking the exit
 	if (!is_valid_map_char(map[y][x]) && map[y][x] != 'F')
 		handle_error("Error: invalid map character during floodfill\n", game);
 	map[y][x] = 'F';

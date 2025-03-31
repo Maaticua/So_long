@@ -16,17 +16,27 @@ void	init_textures(t_game *game)
 {
 	game->textures->wall = mlx_xpm_file_to_image(game->mlx, "textures/wall.xpm",
 			&game->textures->tile_size, &game->textures->tile_size);
+	if (!game->textures->wall)
+		handle_error("Error: failed to load wall texture\n", game);
 	game->textures->floor = mlx_xpm_file_to_image(game->mlx,
 			"textures/floor.xpm", &game->textures->tile_size,
 			&game->textures->tile_size);
+	if (!game->textures->floor)
+		handle_error("Error: failed to load floor texture\n", game);
 	game->textures->player = mlx_xpm_file_to_image(game->mlx,
 			"textures/player.xpm", &game->textures->tile_size,
 			&game->textures->tile_size);
+	if (!game->textures->player)
+		handle_error("Error: failed to load player texture\n", game);
 	game->textures->collec = mlx_xpm_file_to_image(game->mlx,
 			"textures/collec.xpm", &game->textures->tile_size,
 			&game->textures->tile_size);
+	if (!game->textures->collec)
+		handle_error("Error: failed to load collectible texture\n", game);
 	game->textures->exit = mlx_xpm_file_to_image(game->mlx, "textures/exit.xpm",
 			&game->textures->tile_size, &game->textures->tile_size);
+	if (!game->textures->exit)
+		handle_error("Error: failed to load exit texture\n", game);
 }
 void	free_textures(t_game *game)
 {
@@ -39,12 +49,4 @@ void	free_textures(t_game *game)
 		mlx_destroy_image(game->mlx, game->textures->exit);
 		free(game->textures);
 	}
-}
-void	init_textures(t_game *game)
-{
-	game->textures->wall = mlx_xpm_file_to_image(game->mlx, "textures/wall.xpm",
-			&game->textures->tile_size, &game->textures->tile_size);
-	if (!game->textures->wall)
-		handle_error("Error: failed to load wall texture\n", game);
-	// Repeat for other textures...
 }

@@ -54,9 +54,53 @@ typedef struct s_game
 	t_textures	*textures;
 }	t_game;
 
-int	close_wind(t_game *game);
-int	handle_keys(int keycode, t_game *game);
-char	**read_map(const char *filename);
+// EXIT.C
+
+void	free_resources(t_game *game);
+void	close_game(t_game *game);
+int		close_window(t_game *game);
+
+// FLOODFILL.C
+
+void	floodfill(char **map, int x, int y, t_game *game);
+int		is_map_solvable(t_game *game);
+
+// GAME_MOVEMENT.C
+
+void	move_player(t_game *game, int new_x, int new_y);
+int		handle_keys(int keycode, t_game *game);
+int		validate_input(int argc, char **argv);
+
+// GAME_UTILS.C
+
+void	find_player_loc(t_game *game);
+void	count_collec(t_game *game);
+void	handle_error(const char *message, t_game *game);
+void	init_textures_struct(t_game *game);
+void	init_game(t_game *game, const char *map_path);
+int		validate_input(int argc, char **argv);
+
+// MAP_CHECKER.C
+
+int	is_valid_map_char(char c);
+int	check_map_type(const char *filename);
+int	check_map_rectangular(t_game *game);
+int	count_map_elements(t_game *game);
+int	is_map_enclosed(t_game *game);
+int	validate_map(t_game *game);
+
+// MAP_UTILS.C
+
 void	draw_map(t_game *game);
+void	draw_tile(t_game *game, int x, int y, void *texture);
+void	free_map(char **map);
+void	get_map_dimensions(char **map, int *width, int *height);
+char	*trim_newline(char *str);
+char	**copy_map(char **map);
+
+// TEXTURES_UTILS.C
+
+void	init_textures(t_game *game);
+void	free_textures(t_game *game);
 
 #endif

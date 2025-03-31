@@ -20,6 +20,7 @@ void	close_game(t_game *game)
 		mlx_destroy_window(game->mlx, game->mlx_win);
 	if (game->mlx)
 	{
+		mlx_destroy_display(game->mlx);
 		free(game->mlx);
 	}
 	exit(0);
