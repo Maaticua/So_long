@@ -16,7 +16,11 @@ CFLAGS				= -Wall -Werror -Wextra -g3 -I $(INC)
 RM					= rm -f
 
 # Source Files
-SRCS				= $(SRC_DIR)so_long.c
+SRCS				= $(SRC_DIR)so_long.c \
+					$(SRC_DIR)game_movement.c \
+					$(SRC_DIR)game_utils.c \
+					$(SRC_DIR)map_checker.c \
+					$(SRC_DIR)map_utils.c
 
 # Object Files
 OBJ 				= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
