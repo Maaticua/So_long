@@ -57,6 +57,8 @@ char	**copy_map(char **map)
 	int		i;
 	char	**map_copy;
 
+	if (!map)
+		return (NULL);
 	i = 0;
 	while (map[i])
 		i++;

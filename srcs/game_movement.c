@@ -28,10 +28,12 @@ void	move_player(t_game *game, int new_x, int new_y)
 		ft_printf("gg, %d deplacement fait\n", game->move_count);
 		close_window(game);
 	}
+	if (game->map[game->player_y][game->player_x] != 'E')
+		game->map[game->player_y][game->player_x] = '0';
 	game->map[game->player_y][game->player_x] = '0';
-	game->map[new_y][new_x] = 'P';
 	game->player_x = new_x;
 	game->player_y = new_y;
+	game->map[new_y][new_x] = 'P';
 	game->move_count++;
 	ft_printf("%d\n", game->move_count);
 	draw_map(game);
@@ -39,7 +41,7 @@ void	move_player(t_game *game, int new_x, int new_y)
 int	handle_keys(int keycode, t_game *game)
 {
 	if (keycode == ESC_KEY)
-		close_wind(game);
+		close_window(game);
 	else if (keycode == W_KEY) // Haut
 		move_player(game, game->player_x, game->player_y - 1);
 	else if (keycode == S_KEY) // Bas
@@ -49,15 +51,4 @@ int	handle_keys(int keycode, t_game *game)
 	else if (keycode == D_KEY) // Droite
 		move_player(game, game->player_x + 1, game->player_y);
 	return (0);
-}
-int	validate_input(int argc, char **argv)
-{
-	if (argc != 2)
-	{
-		write(2, "Error: incorrect number of arguments\n", 37);
-		return (0);
-	}
-	if (!check_map_type(argv[1]))
-		return (0);
-	return (1);
 }

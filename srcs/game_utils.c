@@ -33,6 +33,7 @@ void	find_player_loc(t_game *game)
 		}
 		y++;
 	}
+	handle_error("Error: player not found on the map\n", game);
 }
 void	count_collec(t_game *game)
 {

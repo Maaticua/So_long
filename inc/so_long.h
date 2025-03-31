@@ -103,4 +103,9 @@ char	**copy_map(char **map);
 void	init_textures(t_game *game);
 void	free_textures(t_game *game);
 
+// READ_MAP.C
+
+char		**read_map(const char *file_path);
+// static char	*read_map_content(int fd);
+
 #endif

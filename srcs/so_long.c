@@ -33,7 +33,7 @@ int	main(int ac, char **av)
 	init_textures(&game);
 	draw_map(&game);
 	mlx_key_hook(game.mlx_win, handle_keys, &game);
-	mlx_hook(game.mlx_win, 17, 0, close_wind, &game);
+	mlx_hook(game.mlx_win, 17, 0, close_window, &game);
 	mlx_loop(game.mlx);
 	return (0);
 }
