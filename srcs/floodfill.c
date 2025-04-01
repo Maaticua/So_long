@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:16:48 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/31 17:17:35 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:11:28 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,11 @@ void	floodfill(char **map, int x, int y, t_game *game)
 	floodfill(map, x, y + 1, game);
 	floodfill(map, x, y - 1, game);
 }
-int	is_map_solvable(t_game *game)
+int	check_reachable_elements(char **map_temp)
 {
-	char	**map_temp;
-	int		x;
-	int		y;
+	int	x;
+	int	y;
 
-	get_map_dimensions(game->map, &game->width, &game->height);
-	map_temp = copy_map(game->map);
-	if (!map_temp)
-		return (write(2, "Error: failed to copy map\n", 26), 0);
-	find_player_loc(game);
-	if (game->player_x < 0 || game->player_y < 0)
-		return (write(2, "Error: player not found\n", 24), free_map(map_temp),
-			0);
-	floodfill(map_temp, game->player_x, game->player_y, game);
 	y = -1;
 	while (map_temp[++y])
 	{
@@ -52,6 +42,23 @@ int	is_map_solvable(t_game *game)
 			}
 		}
 	}
+	return (1);
+}
+int	is_map_solvable(t_game *game)
+{
+	char	**map_temp;
+
+	get_map_dimensions(game->map, &game->width, &game->height);
+	map_temp = copy_map(game->map);
+	if (!map_temp)
+		return (write(2, "Error: failed to copy map\n", 26), 0);
+	find_player_loc(game);
+	if (game->player_x < 0 || game->player_y < 0)
+		return (write(2, "Error: player not found\n", 24), free_map(map_temp),
+			0);
+	floodfill(map_temp, game->player_x, game->player_y, game);
+	if (!check_reachable_elements(map_temp))
+		return (0);
 	free_map(map_temp);
 	return (1);
 }

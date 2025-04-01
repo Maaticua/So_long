@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:34:57 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/31 17:16:47 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:14:56 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,24 +83,4 @@ void	init_game(t_game *game, const char *map_path)
 	game->move_count = 0;
 	get_map_dimensions(game->map, &game->width, &game->height);
 	init_textures_struct(game);
-}
-int	validate_input(int argc, char **argv)
-{
-	int	fd;
-
-	if (argc != 2)
-	{
-		write(2, "Error: incorrect number of arguments\n", 37);
-		return (0);
-	}
-	if (!check_map_type(argv[1]))
-		return (0);
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
-	{
-		write(2, "Error: failed to open map file\n", 31);
-		return (0);
-	}
-	close(fd);
-	return (1);
 }

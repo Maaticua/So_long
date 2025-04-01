@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:45 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/31 14:45:09 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:20:34 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ int	main(int ac, char **av)
 	init_game(&game, av[1]);
 	window_width = game.width * game.textures->tile_size;
 	window_height = game.height * game.textures->tile_size;
-	game.mlx_win = mlx_new_window(game.mlx, window_width, window_height, "so_long");
+	game.mlx_win = mlx_new_window(game.mlx, window_width, window_height,
+			"so_long");
 	init_textures(&game);
 	draw_map(&game);
 	mlx_key_hook(game.mlx_win, handle_keys, &game);

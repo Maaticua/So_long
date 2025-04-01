@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:37 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/27 17:42:18 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:15:32 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int		close_window(t_game *game);
 
 void	floodfill(char **map, int x, int y, t_game *game);
 int		is_map_solvable(t_game *game);
+int		check_reachable_elements(char **map_temp);
 
 // GAME_MOVEMENT.C
 
@@ -78,7 +79,6 @@ void	count_collec(t_game *game);
 void	handle_error(const char *message, t_game *game);
 void	init_textures_struct(t_game *game);
 void	init_game(t_game *game, const char *map_path);
-int		validate_input(int argc, char **argv);
 
 // MAP_CHECKER.C
 

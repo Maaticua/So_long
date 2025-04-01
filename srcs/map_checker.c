@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:17:22 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/31 17:17:04 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:18:59 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,35 +46,84 @@ int	check_map_rectangular(t_game *game)
 	}
 	return (1);
 }
-int	count_map_elements(t_game *game)
+// int	count_map_elements(t_game *game)
+// {
+// 	int	x;
+// 	int	y;
+// 	int	player;
+// 	int	exit;
+// 	int	collect;
+
+// 	y = 0;
+// 	player = 0;
+// 	exit = 0;
+// 	collect = 0;
+// 	while (game->map[y])
+// 	{
+// 		x = 0;
+// 		while (game->map[y][x])
+// 		{
+// 			if (!is_valid_map_char(game->map[y][x]))
+// 				return (write(2, "Error: invalid character\n", 26), 0);
+// 			if (game->map[y][x] == 'P')
+// 				player++;
+// 			if (game->map[y][x] == 'E')
+// 				exit++;
+// 			if (game->map[y][x] == 'C')
+// 				collect++;
+// 			x++;
+// 		}
+// 		y++;
+// 	}
+// 	if (player != 1 || exit != 1 || collect < 1)
+// 		return (write(2, "Error: invalid map setup\n", 25), 0);
+// 	return (1);
+// }
+
+int	is_valid_element(char c, int *player, int *exit, int *collect)
+{
+	if (!is_valid_map_char(c))
+		return (write(2, "Error: invalid character\n", 26), 0);
+	if (c == 'P')
+		(*player)++;
+	if (c == 'E')
+		(*exit)++;
+	if (c == 'C')
+		(*collect)++;
+	return (1);
+}
+
+int	check_map_elements(t_game *game, int *player, int *exit, int *collect)
 {
 	int	x;
 	int	y;
-	int	player;
-	int	exit;
-	int	collect;
 
 	y = 0;
-	player = 0;
-	exit = 0;
-	collect = 0;
 	while (game->map[y])
 	{
 		x = 0;
 		while (game->map[y][x])
 		{
-			if (!is_valid_map_char(game->map[y][x]))
-				return (write(2, "Error: invalid character\n", 26), 0);
-			if (game->map[y][x] == 'P')
-				player++;
-			if (game->map[y][x] == 'E')
-				exit++;
-			if (game->map[y][x] == 'C')
-				collect++;
+			if (!is_valid_element(game->map[y][x], player, exit, collect))
+				return (0);
 			x++;
 		}
 		y++;
 	}
+	return (1);
+}
+
+int	count_map_elements(t_game *game)
+{
+	int	player;
+	int	exit;
+	int	collect;
+
+	player = 0;
+	exit = 0;
+	collect = 0;
+	if (!check_map_elements(game, &player, &exit, &collect))
+		return (0);
 	if (player != 1 || exit != 1 || collect < 1)
 		return (write(2, "Error: invalid map setup\n", 25), 0);
 	return (1);
