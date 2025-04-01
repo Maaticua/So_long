@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:37 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/01 11:40:45 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:21:44 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int		check_map_elements(t_game *game, int *player, int *exit, int *collect);
 int		count_map_elements(t_game *game);
 int		is_map_enclosed(t_game *game);
 int		validate_map(t_game *game);
+int		is_map_enclosed(t_game *game);
 
 // MAP_UTILS.C
 
