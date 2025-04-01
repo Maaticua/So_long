@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 11:25:52 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/01 14:24:27 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:32:58 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ int	validate_map(t_game *game)
 		return (write(2, "Error: map is empty\n", 20), 0);
 	if (!check_map_rectangular(game))
 		return (0);
-	if (!is_map_enclosed(game))
-		return (0);
 	if (!count_map_elements(game))
 		return (0);
+	if (!is_map_enclosed(game))
+			return (0);
 	if (!is_map_solvable(game))
 		return (0);
 	return (1);

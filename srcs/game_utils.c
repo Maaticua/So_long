@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:34:57 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/01 11:27:06 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:37:21 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	init_game(t_game *game, const char *map_path)
 	game->map = read_map(map_path);
 	if (!game->map)
 		handle_error("Error: invalid map\n", game);
+	get_map_dimensions(game->map, &game->width, &game->height);
 	if (!validate_map(game))
 		handle_error("Error: map validation failed\n", game);
 	find_player_loc(game);
