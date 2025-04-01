@@ -3,14 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   read_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maati <maati@student.42.fr>                #+#  +:+       +#+        */
+/*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-03-31 19:02:59 by maati             #+#    #+#             */
-/*   Updated: 2025-03-31 19:02:59 by maati            ###   ########.fr       */
+/*   Created: 2025/03/31 19:02:59 by maati             #+#    #+#             */
+/*   Updated: 2025/04/01 11:30:34 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/so_long.h"
+
+void	draw_map(t_game *game)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (game->map[y][x] == '1')
+				draw_tile(game, x, y, game->textures->wall);
+			else if (game->map[y][x] == '0')
+				draw_tile(game, x, y, game->textures->floor);
+			else if (game->map[y][x] == 'P')
+				draw_tile(game, x, y, game->textures->player);
+			else if (game->map[y][x] == 'C')
+				draw_tile(game, x, y, game->textures->collec);
+			else if (game->map[y][x] == 'E')
+				draw_tile(game, x, y, game->textures->exit);
+			x++;
+		}
+		y++;
+	}
+}
 
 static char	*read_map_content(int fd)
 {
@@ -21,7 +48,8 @@ static char	*read_map_content(int fd)
 	map_content = ft_strdup("");
 	if (!map_content)
 		return (NULL);
-	while ((line = get_next_line(fd)) != NULL)
+	line = get_next_line(fd);
+	while (line)
 	{
 		temp = map_content;
 		map_content = ft_strjoin(map_content, line);
@@ -29,6 +57,7 @@ static char	*read_map_content(int fd)
 		free(line);
 		if (!map_content)
 			return (NULL);
+		line = get_next_line(fd);
 	}
 	return (map_content);
 }

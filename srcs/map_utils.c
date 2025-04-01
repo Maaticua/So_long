@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:15:23 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/31 17:15:04 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:28:30 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ char	*trim_newline(char *str)
 		str[len - 1] = '\0';
 	return (str);
 }
+
 void	get_map_dimensions(char **map, int *width, int *height)
 {
 	int	y;
@@ -38,6 +39,7 @@ void	get_map_dimensions(char **map, int *width, int *height)
 	}
 	*height = y;
 }
+
 void	free_map(char **map)
 {
 	int	i;
@@ -52,6 +54,7 @@ void	free_map(char **map)
 	}
 	free(map);
 }
+
 char	**copy_map(char **map)
 {
 	int		i;
@@ -79,35 +82,9 @@ char	**copy_map(char **map)
 	map_copy[i] = NULL;
 	return (map_copy);
 }
+
 void	draw_tile(t_game *game, int x, int y, void *texture)
 {
 	mlx_put_image_to_window(game->mlx, game->mlx_win, texture, x
 		* game->textures->tile_size, y * game->textures->tile_size);
-}
-
-void	draw_map(t_game *game)
-{
-	int	x;
-	int	y;
-
-	y = 0;
-	while (game->map[y])
-	{
-		x = 0;
-		while (game->map[y][x])
-		{
-			if (game->map[y][x] == '1')
-				draw_tile(game, x, y, game->textures->wall);
-			else if (game->map[y][x] == '0')
-				draw_tile(game, x, y, game->textures->floor);
-			else if (game->map[y][x] == 'P')
-				draw_tile(game, x, y, game->textures->player);
-			else if (game->map[y][x] == 'C')
-				draw_tile(game, x, y, game->textures->collec);
-			else if (game->map[y][x] == 'E')
-				draw_tile(game, x, y, game->textures->exit);
-			x++;
-		}
-		y++;
-	}
 }

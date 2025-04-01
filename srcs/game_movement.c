@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:40:22 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/01 11:15:02 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:26:59 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	handle_player_movement(t_game *game, int new_x, int new_y)
 	ft_printf("%d\n", game->move_count);
 	draw_map(game);
 }
+
 void	move_player(t_game *game, int new_x, int new_y)
 {
 	if (new_x < 0 || new_y < 0 || new_x >= game->width || new_y >= game->height)
@@ -45,6 +46,7 @@ void	move_player(t_game *game, int new_x, int new_y)
 		return ;
 	handle_player_movement(game, new_x, new_y);
 }
+
 int	handle_keys(int keycode, t_game *game)
 {
 	if (keycode == ESC_KEY)
@@ -59,6 +61,7 @@ int	handle_keys(int keycode, t_game *game)
 		move_player(game, game->player_x + 1, game->player_y);
 	return (0);
 }
+
 int	validate_input(int argc, char **argv)
 {
 	int	fd;

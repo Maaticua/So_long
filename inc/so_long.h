@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:37 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/01 11:15:32 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:40:45 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
 # include <fcntl.h>
 # include "../minilibx-linux/mlx.h"
 
-
 typedef struct s_textures
 {
 	void	*player;
@@ -41,21 +40,20 @@ typedef struct s_textures
 
 typedef struct s_game
 {
-	void	*mlx;
-	void	*mlx_win;
-	char	**map;
-	int		player_x;
-	int		player_y;
-	int		total_collec;
-	int		collected;
-	int		move_count;
-	int		width;
-	int		height;
+	void		*mlx;
+	void		*mlx_win;
+	char		**map;
+	int			player_x;
+	int			player_y;
+	int			total_collec;
+	int			collected;
+	int			move_count;
+	int			width;
+	int			height;
 	t_textures	*textures;
 }	t_game;
 
 // EXIT.C
-
 void	free_resources(t_game *game);
 void	close_game(t_game *game);
 int		close_window(t_game *game);
@@ -68,6 +66,7 @@ int		check_reachable_elements(char **map_temp);
 
 // GAME_MOVEMENT.C
 
+void	handle_player_movement(t_game *game, int new_x, int new_y);
 void	move_player(t_game *game, int new_x, int new_y);
 int		handle_keys(int keycode, t_game *game);
 int		validate_input(int argc, char **argv);
@@ -82,30 +81,35 @@ void	init_game(t_game *game, const char *map_path);
 
 // MAP_CHECKER.C
 
-int	is_valid_map_char(char c);
-int	check_map_type(const char *filename);
-int	check_map_rectangular(t_game *game);
-int	count_map_elements(t_game *game);
-int	is_map_enclosed(t_game *game);
-int	validate_map(t_game *game);
+int		is_valid_map_char(char c);
+int		check_map_type(const char *filename);
+int		check_map_rectangular(t_game *game);
+int		is_valid_element(char c, int *player, int *exit, int *collect);
+int		check_map_elements(t_game *game, int *player, int *exit, int *collect);
+
+// MAP_CHECKER2.C
+
+int		count_map_elements(t_game *game);
+int		is_map_enclosed(t_game *game);
+int		validate_map(t_game *game);
 
 // MAP_UTILS.C
 
-void	draw_map(t_game *game);
-void	draw_tile(t_game *game, int x, int y, void *texture);
-void	free_map(char **map);
-void	get_map_dimensions(char **map, int *width, int *height);
 char	*trim_newline(char *str);
 char	**copy_map(char **map);
+void	get_map_dimensions(char **map, int *width, int *height);
+void	free_map(char **map);
+void	draw_tile(t_game *game, int x, int y, void *texture);
+
+// READ_MAP.C
+
+char	**read_map(const char *file_path);
+void	draw_map(t_game *game);
+// static char	*read_map_content(int fd);
 
 // TEXTURES_UTILS.C
 
 void	init_textures(t_game *game);
 void	free_textures(t_game *game);
-
-// READ_MAP.C
-
-char		**read_map(const char *file_path);
-// static char	*read_map_content(int fd);
 
 #endif

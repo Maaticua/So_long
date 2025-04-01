@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 13:24:01 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/31 17:15:11 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:27:59 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	init_textures(t_game *game)
 	if (!game->textures->exit)
 		handle_error("Error: failed to load exit texture\n", game);
 }
+
 void	free_textures(t_game *game)
 {
 	if (game->textures)

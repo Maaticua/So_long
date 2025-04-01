@@ -21,6 +21,7 @@ SRCS				= $(SRC_DIR)exit.c \
 					$(SRC_DIR)game_movement.c \
 					$(SRC_DIR)game_utils.c \
 					$(SRC_DIR)map_checker.c \
+					$(SRC_DIR)map_checker2.c \
 					$(SRC_DIR)map_utils.c \
 					$(SRC_DIR)read_map.c \
 					$(SRC_DIR)so_long.c \

@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:24:52 by macaruan          #+#    #+#             */
-/*   Updated: 2025/03/31 17:17:15 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:26:43 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,13 @@ void	close_game(t_game *game)
 	}
 	exit(0);
 }
+
 int	close_window(t_game *game)
 {
 	close_game(game);
 	return (0);
 }
+
 void	free_resources(t_game *game)
 {
 	if (game->map)

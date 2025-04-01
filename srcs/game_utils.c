@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:34:57 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/01 11:14:56 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:27:06 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	find_player_loc(t_game *game)
 	}
 	handle_error("Error: player not found on the map\n", game);
 }
+
 void	count_collec(t_game *game)
 {
 	int	x;
@@ -54,6 +55,7 @@ void	count_collec(t_game *game)
 		y++;
 	}
 }
+
 void	handle_error(const char *message, t_game *game)
 {
 	if (message)
@@ -62,6 +64,7 @@ void	handle_error(const char *message, t_game *game)
 		close_game(game);
 	exit(1);
 }
+
 void	init_textures_struct(t_game *game)
 {
 	game->textures = malloc(sizeof(t_textures));

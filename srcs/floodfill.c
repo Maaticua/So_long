@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:16:48 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/01 11:11:28 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:26:51 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	floodfill(char **map, int x, int y, t_game *game)
 	floodfill(map, x, y + 1, game);
 	floodfill(map, x, y - 1, game);
 }
+
 int	check_reachable_elements(char **map_temp)
 {
 	int	x;
@@ -44,6 +45,7 @@ int	check_reachable_elements(char **map_temp)
 	}
 	return (1);
 }
+
 int	is_map_solvable(t_game *game)
 {
 	char	**map_temp;
