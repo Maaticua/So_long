@@ -45,7 +45,6 @@ all: $(LIBFT) $(MLX_LIB) $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT) $(MLX_LIB)
 					@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) -L$(MLX_DIR) -lmlx -lX11 -lXext
-					@echo "✅ Compilation réussie !"
 
 # Compilation des fichiers objets
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c

@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:40:22 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/03 13:40:13 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/03 16:06:55 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	handle_player_movement(t_game *game, int new_x, int new_y)
 	{
 		if (game->collected == game->total_collec)
 		{
-			ft_printf("gg, %d déplacements effectués\n", game->move_count);
+			ft_printf("%d déplacements effectués\n", game->move_count);
 			close_window(game);
 		}
 		return ;
