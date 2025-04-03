@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:30:45 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/01 14:18:29 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:18:32 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,8 @@ int	main(int ac, char **av)
 	int		window_width;
 	int		window_height;
 
-	if (ac != 2)
-	{
-		write(2, "Error: incorrect arguments\n", 27);
+	if (!validate_input(ac, av))
 		return (1);
-	}
 	game.mlx = mlx_init();
 	if (!game.mlx)
 		return (1);

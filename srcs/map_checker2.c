@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 11:25:52 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/01 14:32:58 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/03 13:23:57 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	validate_map(t_game *game)
 	if (!count_map_elements(game))
 		return (0);
 	if (!is_map_enclosed(game))
-			return (0);
+		return (0);
 	if (!is_map_solvable(game))
 		return (0);
 	return (1);

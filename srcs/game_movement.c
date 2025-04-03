@@ -6,7 +6,7 @@
 /*   By: macaruan <macaruan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:40:22 by macaruan          #+#    #+#             */
-/*   Updated: 2025/04/01 11:26:59 by macaruan         ###   ########.fr       */
+/*   Updated: 2025/04/03 13:40:13 by macaruan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ int	validate_input(int argc, char **argv)
 		return (0);
 	}
 	if (!check_map_type(argv[1]))
+	{
+		write(2, "Error: map file not a .ber\n", 27);
 		return (0);
+	}
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 	{
